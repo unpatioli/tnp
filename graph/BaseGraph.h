@@ -25,8 +25,7 @@ private:
         typedef boost::edge_property_tag kind;
     };
     typedef boost::property <sarc_t, nw::sarc> EdgeProperty;
-//    typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::bidirectionalS, VertexProperty, EdgeProperty> GraphT;
-    using GraphT = boost::adjacency_list <boost::vecS, boost::vecS, boost::bidirectionalS, VertexProperty, EdgeProperty>;
+    typedef boost::adjacency_list <boost::vecS, boost::vecS, boost::bidirectionalS, VertexProperty, EdgeProperty> GraphT;
 
     typedef boost::bimap <
             boost::bimaps::set_of<nw::types::id_t>,
@@ -37,7 +36,7 @@ public:
     BaseGraph();
     virtual ~BaseGraph();
 
-    void init(const char *vertices_fname, const char *edges_fname);
+    void init(const char *dir_name);
 
     boost::graph_traits<GraphT>::vertex_descriptor
     vertex_d(nw::types::id_t id) const;

@@ -21,8 +21,8 @@ void demo(const GraphT& g);
 int main(int argc, char **argv)
 {
     // Parse command line
-    if (argc < 3) {
-        std::cerr << "Usage: " << argv[0] << " <s_nodes_filename> <s_arcs_filename>" << std::endl;
+    if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " <Transnet network dir>" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 
     // Initialize Graph
     GraphT g;
-    g.init(argv[1], argv[2]);
+    g.init(argv[1]);
 
 #ifdef MEASURE_TIME
     auto t_graph_init = std::chrono::high_resolution_clock::now();
