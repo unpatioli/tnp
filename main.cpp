@@ -16,7 +16,8 @@ using namespace boost;
 
 typedef tgr::BaseGraph GraphT;
 
-void demo(const GraphT& g);
+void demo(const GraphT&);
+void demo_line(GraphT&, nw::types::id_t);
 
 int main(int argc, char **argv)
 {
@@ -52,7 +53,12 @@ int main(int argc, char **argv)
 #endif
 
     // Some demo operations with Graph
-    demo(g);
+//    demo(g);
+    int line = 50;
+    if (argc >= 3) {
+        line = std::stoi(argv[2]);
+    }
+    demo_line(g, line);
 
     return EXIT_SUCCESS;
 }
@@ -81,4 +87,38 @@ void demo(const GraphT& g)
 
     std::cout << "num_vertices(g) = " << num_vertices(g.const_graph()) << std::endl;
     std::cout << "num_edges(g) = " << num_edges(g.const_graph()) << std::endl;
+}
+
+void demo_line(GraphT& g, nw::types::id_t line_id)
+{
+    int line_count = 0;
+    std::set<nw::types::id_t> key_set;
+    const int from = 0;
+    const int to = 21000;
+    std::cout << std::endl << "[" << from << ":" << to << "]:" << std::endl;
+
+    for (int i = from; i < to; ++i) {
+        key_set.insert(i);
+    }
+
+#ifdef MEASURE_TIME
+    auto t0 = std::chrono::high_resolution_clock::now();
+#endif
+
+    auto line_set_ptr = g.edges_by_line(key_set);
+    std::for_each(line_set_ptr->begin(), line_set_ptr->end(), [&](std::pair<nw::types::id_t, std::string> pair) {
+        std::cout << pair.first << ": " << pair.second << std::endl;
+        ++line_count;
+    });
+
+#ifdef MEASURE_TIME
+    auto t1 = std::chrono::high_resolution_clock::now();
+#endif
+
+    std::cout << "total lines = " << line_count << std::endl;
+
+#ifdef MEASURE_TIME
+    auto ts_query_process = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0);
+    std::cout << "Query process: " << ts_query_process.count() << " milliseconds." << std::endl;
+#endif
 }
