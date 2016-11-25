@@ -102,23 +102,31 @@ void demo_line(GraphT& g, nw::types::id_t line_id)
     }
 
 #ifdef MEASURE_TIME
-    auto t0 = std::chrono::high_resolution_clock::now();
+    auto t_0 = std::chrono::high_resolution_clock::now();
 #endif
 
     auto line_set_ptr = g.edges_by_line(key_set);
-    std::for_each(line_set_ptr->begin(), line_set_ptr->end(), [&](std::pair<nw::types::id_t, std::string> pair) {
-        std::cout << pair.first << ": " << pair.second << std::endl;
-        ++line_count;
-    });
 
 #ifdef MEASURE_TIME
-    auto t1 = std::chrono::high_resolution_clock::now();
+    auto t_get_edges = std::chrono::high_resolution_clock::now();
+#endif
+
+std::for_each(line_set_ptr->begin(), line_set_ptr->end(), [&](std::pair<nw::types::id_t, std::string> pair) {
+    std::cout << pair.first << ": " << pair.second << std::endl;
+    ++line_count;
+});
+
+#ifdef MEASURE_TIME
+    auto t_cout = std::chrono::high_resolution_clock::now();
 #endif
 
     std::cout << "total lines = " << line_count << std::endl;
 
 #ifdef MEASURE_TIME
-    auto ts_query_process = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0);
-    std::cout << "Query process: " << ts_query_process.count() << " milliseconds." << std::endl;
+    auto ts_get_edges = std::chrono::duration_cast<std::chrono::milliseconds>(t_get_edges - t_0);
+    std::cout << "Get edges: " << ts_get_edges.count() << " milliseconds." << std::endl;
+
+    auto ts_cout = std::chrono::duration_cast<std::chrono::milliseconds>(t_cout - t_get_edges);
+    std::cout << "Get cout: " << ts_cout.count() << " milliseconds." << std::endl;
 #endif
 }
